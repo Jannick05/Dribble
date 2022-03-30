@@ -1,5 +1,6 @@
-package org.jannick.dribble.commands;
+package org.jannick.dribble.events;
 
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -15,15 +16,16 @@ public class VerifyReact extends ListenerAdapter {
         if (event.getAuthor().isBot()) return;
         Message message = event.getMessage();
         String content = message.getContentRaw();
-        if (content.equals("verifyMessage"))
-        {
-            MessageChannel channel = event.getChannel();
-            channel.sendMessage("> Nedenunder skal du vælge __✅ Verify,__ for at få **adgang** til discord.")
-                .setActionRow(
-                        Button.success("verify", "Verify")
-                                .withEmoji(Emoji.fromMarkdown("✅"))
-                )
-                .queue();
+        if (content.equals("verifyMessage")) {
+            if (event.getMember().hasPermission(Permission.MANAGE_SERVER)) {
+                MessageChannel channel = event.getChannel();
+                channel.sendMessage("> Nedenunder skal du vælge __✅ Verify,__ for at få **adgang** til discord.")
+                        .setActionRow(
+                                Button.success("verify", "Verify")
+                                        .withEmoji(Emoji.fromMarkdown("✅"))
+                        )
+                        .queue();
+            }
         }
     }
 

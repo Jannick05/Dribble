@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
@@ -13,8 +14,12 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import org.jannick.dribble.commands.SlashCommands;
-import org.jannick.dribble.commands.VerifyReact;
+import org.jannick.dribble.commands.moderation.Ban;
+import org.jannick.dribble.commands.moderation.Timeout;
+import org.jannick.dribble.commands.utilities.Avatar;
+import org.jannick.dribble.commands.utilities.Banner;
+import org.jannick.dribble.commands.moderation.Purge;
+import org.jannick.dribble.events.VerifyReact;
 
 import javax.security.auth.login.LoginException;
 
@@ -25,7 +30,7 @@ public class Main implements EventListener {
 
             final JDA jda = JDABuilder.createLight(Config.getToken())
                     .setStatus(OnlineStatus.IDLE)
-                    .setActivity(Activity.competing("Skywars ⚔️"))
+                    .setActivity(Activity.streaming("Skywars ⚔️", "https://www.twitch.tv/jannick_05"))
                     .setMemberCachePolicy(MemberCachePolicy.ONLINE)
                     .setChunkingFilter(ChunkingFilter.ALL)
                     .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
@@ -34,16 +39,34 @@ public class Main implements EventListener {
                     .awaitReady();
 
             jda.addEventListener(
-                    new SlashCommands(),
+                    new Avatar(),
+                    new Banner(),
+                    new Purge(),
+                    new Ban(),
+                    new Timeout(),
                     new VerifyReact()
             );
 
-            //var guild = jda.getGuildById(958069975443177542L);
-            jda.updateCommands()
-                    .addCommands(Commands.slash("ping", "Gives the current ping"))
-                    .addCommands(Commands.slash("info", "Get info"))
+            Guild guild = jda.getGuildById(958069975443177542L);
+            jda.updateCommands().queue();
+            guild.updateCommands()
+                    .addCommands(Commands.slash("avatar", "Få en persons avatar")
+                            .addOption(OptionType.USER, "person", "Hvis avatar vil du have")
+                    )
+                    .addCommands(Commands.slash("banner", "Få en persons banner")
+                            .addOption(OptionType.USER, "person", "Hvis banner vil du have")
+                    )
                     .addCommands(Commands.slash("purge", "Fjern et antal beskeder")
-                            .addOption(OptionType.INTEGER, "antal", "Antal beskeder der skal slettes")
+                            .addOption(OptionType.INTEGER, "antal", "Antal beskeder der skal slettes", true)
+                    )
+                    .addCommands(Commands.slash("ban", "Ban en person")
+                            .addOption(OptionType.USER, "person", "Hvem skal bannes", true)
+                            .addOption(OptionType.STRING, "grund", "Hvorfor skal personen bannes")
+                    )
+                    .addCommands(Commands.slash("mute", "Timeout en person")
+                            .addOption(OptionType.USER, "person", "Hvem skal timeoutes", true)
+                            .addOption(OptionType.INTEGER, "tid", "Hvor lang tid skal personen timeoutes", true)
+                            .addOption(OptionType.STRING, "grund", "Hvorfor skal personen timeoutes")
                     )
                     .queue();
 
