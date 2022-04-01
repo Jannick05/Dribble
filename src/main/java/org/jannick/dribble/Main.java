@@ -10,12 +10,14 @@ import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.jannick.dribble.commands.moderation.Ban;
 import org.jannick.dribble.commands.moderation.Timeout;
+import org.jannick.dribble.commands.moderation.Untimeout;
 import org.jannick.dribble.commands.utilities.Avatar;
 import org.jannick.dribble.commands.utilities.Banner;
 import org.jannick.dribble.commands.moderation.Purge;
@@ -44,6 +46,7 @@ public class Main implements EventListener {
                     new Purge(),
                     new Ban(),
                     new Timeout(),
+                    new Untimeout(),
                     new VerifyReact()
             );
 
@@ -57,16 +60,28 @@ public class Main implements EventListener {
                             .addOption(OptionType.USER, "person", "Hvis banner vil du have")
                     )
                     .addCommands(Commands.slash("purge", "Fjern et antal beskeder")
-                            .addOption(OptionType.INTEGER, "antal", "Antal beskeder der skal slettes", true)
+                            .addOptions(
+                                    new OptionData(OptionType.INTEGER,
+                                            "antal", "Antal beskeder der skal slettes", true)
+                                            .setMaxValue(100)
+                                            .setMinValue(2)
+                            )
                     )
                     .addCommands(Commands.slash("ban", "Ban en person")
                             .addOption(OptionType.USER, "person", "Hvem skal bannes", true)
                             .addOption(OptionType.STRING, "grund", "Hvorfor skal personen bannes")
                     )
-                    .addCommands(Commands.slash("mute", "Timeout en person")
-                            .addOption(OptionType.USER, "person", "Hvem skal timeoutes", true)
-                            .addOption(OptionType.INTEGER, "tid", "Hvor lang tid skal personen timeoutes", true)
-                            .addOption(OptionType.STRING, "grund", "Hvorfor skal personen timeoutes")
+                    .addCommands(Commands.slash("kick", "Kick en person")
+                            .addOption(OptionType.USER, "person", "Hvem skal kickes", true)
+                            .addOption(OptionType.STRING, "grund", "Hvorfor skal personen kickes")
+                    )
+                    .addCommands(Commands.slash("mute", "Mute en person")
+                            .addOption(OptionType.USER, "person", "Hvem skal mutes", true)
+                            .addOption(OptionType.INTEGER, "tid", "Hvor lang tid skal personen mutes i", true)
+                            .addOption(OptionType.STRING, "grund", "Hvorfor skal personen mutes")
+                    )
+                    .addCommands(Commands.slash("unmute", "Unmute en person")
+                            .addOption(OptionType.USER, "person", "Hvem skal unmutes", true)
                     )
                     .queue();
 
