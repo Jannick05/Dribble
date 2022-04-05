@@ -12,17 +12,25 @@ import java.awt.*;
 
 public class Avatar extends ListenerAdapter {
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        User user = event.getUser();
-        String name = event.getName();
-        Guild guild = event.getGuild();
-        String guildId = guild.getId();
         if (event.getName().equals("avatar")) {
             EmbedBuilder avatarBuilder = new EmbedBuilder();
-            avatarBuilder.setColor(Color.CYAN);
             Member member = event.getOption("person", event.getMember(), OptionMapping::getAsMember);
-            avatarBuilder.setTitle(member.getUser().getAsTag() + "'s Avatar");
-            avatarBuilder.setImage(member.getEffectiveAvatarUrl());
-            event.replyEmbeds(avatarBuilder.build()).setEphemeral(false).queue();
+            String avatarId = member.getUser().getAvatarId();
+            if (avatarId == null) {
+                avatarBuilder.setColor(Color.RED);
+                avatarBuilder.setDescription(":x: Denne person har ikke et avatar");
+                event.replyEmbeds(avatarBuilder.build()).setEphemeral(true).queue();
+            } else if (avatarId.startsWith("a_")) {
+                avatarBuilder.setColor(Color.CYAN);
+                avatarBuilder.setTitle(member.getUser().getAsTag() + "'s Avatar");
+                avatarBuilder.setImage("https://cdn.discordapp.com/avatars/" + member.getId() + "/" + avatarId + ".gif?size=512");
+                event.replyEmbeds(avatarBuilder.build()).setEphemeral(false).queue();
+            } else {
+                avatarBuilder.setColor(Color.CYAN);
+                avatarBuilder.setTitle(member.getUser().getAsTag() + "'s Avatar");
+                avatarBuilder.setImage("https://cdn.discordapp.com/avatars/" + member.getId() + "/" + avatarId + ".png?size=512");
+                event.replyEmbeds(avatarBuilder.build()).setEphemeral(false).queue();
+            }
         }
     }
 }

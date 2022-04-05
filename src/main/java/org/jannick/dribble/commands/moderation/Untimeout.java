@@ -12,10 +12,6 @@ import java.awt.*;
 
 public class Untimeout extends ListenerAdapter {
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        User user = event.getUser();
-        String name = event.getName();
-        Guild guild = event.getGuild();
-        String guildId = guild.getId();
         if (event.getName().equals("unmute")) {
             EmbedBuilder untimeoutBuilder = new EmbedBuilder();
             if (event.getMember().hasPermission(Permission.MODERATE_MEMBERS)) {

@@ -13,10 +13,6 @@ import java.util.List;
 
 public class Purge extends ListenerAdapter {
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        User user = event.getUser();
-        String name = event.getName();
-        Guild guild = event.getGuild();
-        String guildId = guild.getId();
         if (event.getName().equals("purge")) {
             EmbedBuilder purgeBuilder = new EmbedBuilder();
             if (event.getMember().hasPermission(Permission.MESSAGE_MANAGE)) {

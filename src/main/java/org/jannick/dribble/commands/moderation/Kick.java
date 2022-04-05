@@ -13,10 +13,7 @@ import java.awt.*;
 
 public class Kick extends ListenerAdapter {
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        User user = event.getUser();
-        String name = event.getName();
         Guild guild = event.getGuild();
-        String guildId = guild.getId();
         if (event.getName().equals("kick")) {
             EmbedBuilder kickBuilder = new EmbedBuilder();
             if (event.getMember().hasPermission(Permission.KICK_MEMBERS)) {

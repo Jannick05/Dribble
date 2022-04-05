@@ -18,9 +18,11 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.jannick.dribble.commands.moderation.Ban;
 import org.jannick.dribble.commands.moderation.Timeout;
 import org.jannick.dribble.commands.moderation.Untimeout;
+import org.jannick.dribble.commands.ticket.TicketCreate;
 import org.jannick.dribble.commands.utilities.Avatar;
 import org.jannick.dribble.commands.utilities.Banner;
 import org.jannick.dribble.commands.moderation.Purge;
+import org.jannick.dribble.commands.utilities.Emotes;
 import org.jannick.dribble.events.VerifyReact;
 
 import javax.security.auth.login.LoginException;
@@ -37,6 +39,7 @@ public class Main implements EventListener {
                     .setChunkingFilter(ChunkingFilter.ALL)
                     .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
                     .enableCache(CacheFlag.ACTIVITY)
+                    .enableCache(CacheFlag.EMOTE)
                     .build()
                     .awaitReady();
 
@@ -47,7 +50,9 @@ public class Main implements EventListener {
                     new Ban(),
                     new Timeout(),
                     new Untimeout(),
-                    new VerifyReact()
+                    new VerifyReact(),
+                    new Emotes(),
+                    new TicketCreate()
             );
 
             Guild guild = jda.getGuildById(958069975443177542L);
@@ -82,6 +87,10 @@ public class Main implements EventListener {
                     )
                     .addCommands(Commands.slash("unmute", "Unmute en person")
                             .addOption(OptionType.USER, "person", "Hvem skal unmutes", true)
+                    )
+                    .addCommands(Commands.slash("emotes", "Send serverens emotes")
+                    )
+                    .addCommands(Commands.slash("ticket", "Lav en ticket angående et emne")
                     )
                     .queue();
 
