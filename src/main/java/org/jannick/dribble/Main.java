@@ -23,6 +23,7 @@ import org.jannick.dribble.commands.utilities.Avatar;
 import org.jannick.dribble.commands.utilities.Banner;
 import org.jannick.dribble.commands.moderation.Purge;
 import org.jannick.dribble.commands.utilities.Emotes;
+import org.jannick.dribble.events.TicketReact;
 import org.jannick.dribble.events.VerifyReact;
 
 import javax.security.auth.login.LoginException;
@@ -52,7 +53,8 @@ public class Main implements EventListener {
                     new Untimeout(),
                     new VerifyReact(),
                     new Emotes(),
-                    new TicketCreate()
+                    new TicketCreate(),
+                    new TicketReact()
             );
 
             Guild guild = jda.getGuildById(958069975443177542L);
